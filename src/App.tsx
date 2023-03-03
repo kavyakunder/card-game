@@ -2,20 +2,20 @@ import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { useAppStyles } from "./App.style";
+import { Card } from "./component/Card";
 
 const CARD_DATA: CardType[] = [
-  { id: 1, color: "red" },
-  { id: 2, color: "blue" },
-  { id: 3, color: "yellow" },
-  { id: 4, color: "red" },
-  { id: 5, color: "blue" },
-  { id: 6, color: "yellow" },
+  { id: 1, design: "♣️" },
+  { id: 2, design: "♠️" },
+  { id: 3, design: "♦️" },
+  { id: 4, design: "♣️" },
+  { id: 5, design: "♠️" },
+  { id: 6, design: "♦️" },
 ];
 
-type CardType = {
+export type CardType = {
   id: number;
-  color: string;
+  design: string;
 };
 
 function App(): JSX.Element {
@@ -24,16 +24,14 @@ function App(): JSX.Element {
   const [matchedCards, setMatchedCards] = useState<Array<CardType>>([]);
   const [score, setScore] = useState<number>(0);
   const [chances, setChances] = useState<number>(0);
-  const classes = useAppStyles();
 
   const handleCardClick = (card: CardType) => {
     if (
       matchedCards.includes(card) ||
       flippedCards.includes(card) ||
       flippedCards.length === 2
-    ) {
+    )
       return;
-    }
 
     const newFlippedCards = [...flippedCards, card];
     setFlippedCards(newFlippedCards);
@@ -41,21 +39,19 @@ function App(): JSX.Element {
     if (newFlippedCards.length === 2) {
       setChances(chances + 1);
 
-      if (newFlippedCards[0].color === newFlippedCards[1].color) {
+      if (newFlippedCards[0].design === newFlippedCards[1].design) {
         setMatchedCards([...matchedCards, ...newFlippedCards]);
         setScore(score + 1);
         setFlippedCards([]);
         return;
-      } else {
-        setTimeout(() => {
-          setFlippedCards([]);
-        }, 1000);
       }
+      setTimeout(() => {
+        setFlippedCards([]);
+      }, 1000);
     }
   };
 
   const playAgain = () => {
-    setCards([...CARD_DATA]);
     setFlippedCards([]);
     setMatchedCards([]);
     setScore(0);
@@ -68,15 +64,26 @@ function App(): JSX.Element {
 
   return (
     <div>
-      <Typography textAlign="center" variant="h4">
-        Score - {score}
+      <Typography textAlign="center" variant="h4" margin={3}>
+        🃏 Match the memory 🧠
       </Typography>
-      <Typography textAlign="center" variant="h4">
-        Chances - {chances}
+      <Typography textAlign="center" variant="h5" margin={2}>
+        Put your memory skills to the test with our card game!
       </Typography>
-      <Typography textAlign="center" variant="h5">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
-      </Typography>
+      <Grid
+        alignItems="center"
+        direction="row"
+        display="flex"
+        justifyContent="space-around"
+      >
+        <Typography textAlign="center" variant="h5">
+          Chances - {chances}
+        </Typography>
+        <Typography textAlign="center" variant="h5">
+          Score - {score}
+        </Typography>
+      </Grid>
+
       <Grid
         container
         alignItems="center"
@@ -84,26 +91,12 @@ function App(): JSX.Element {
         justifyContent="center"
       >
         {cards.map((card) => (
-          <Grid
-            item
-            alignItems="center"
-            direction="row"
-            justifyContent="center"
-            key={card.id}
-            margin={3}
-            onClick={() => handleCardClick(card)}
-            className={`${classes.card}`}
-            style={{
-              backgroundColor:
-                matchedCards.includes(card) || flippedCards.includes(card)
-                  ? card.color
-                  : "orange",
-            }}
-          >
-            {flippedCards.includes(card) || matchedCards.includes(card)
-              ? card.color
-              : "♣️"}
-          </Grid>
+          <Card
+            card={card}
+            handleCardClick={handleCardClick}
+            flippedCards={flippedCards}
+            matchedCards={matchedCards}
+          />
         ))}
       </Grid>
 
