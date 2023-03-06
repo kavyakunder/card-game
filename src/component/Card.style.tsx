@@ -9,10 +9,10 @@ export const useCardStyles = makeStyles((theme) => ({
     cursor: "pointer",
     display: "flex",
     fontSize: "5rem",
-    height: "17rem",
+    height: "9rem",
+    width: "14rem",
     justifyContent: "center",
-    marginTop: "4rem",
-    width: "12rem",
+    margin: "1rem 2.1rem",
   },
 
   flippedDesign: {

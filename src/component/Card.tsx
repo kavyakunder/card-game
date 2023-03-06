@@ -19,11 +19,11 @@ export const Card = ({
 
   return (
     <Grid
+      container
       item
       alignItems="center"
       direction="row"
       justifyContent="center"
-      margin={3}
       key={card.id}
       onClick={() => handleCardClick(card)}
       className={`${classes.card} ${
