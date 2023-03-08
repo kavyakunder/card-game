@@ -1,41 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Card } from "./component/Card";
 import AppBar from "@mui/material/AppBar";
+import { useAppStyles } from "./App.style";
 
 const CARD_DATA: CardType[] = [
-  { id: 1, design: "♣️" },
-  { id: 2, design: "❤️" },
-  { id: 3, design: "♦️" },
-  { id: 4, design: "♣️" },
-  { id: 5, design: "♠️" },
-  { id: 6, design: "♦️" },
-  { id: 7, design: "♠️" },
-  { id: 8, design: "❤️" },
-  { id: 9, design: "😂" },
-  { id: 10, design: "😂" },
-  { id: 11, design: "🦋" },
-  { id: 12, design: "🦋" },
-  { id: 13, design: "🐶" },
-  { id: 14, design: "🐶" },
-  { id: 15, design: "⭐️" },
-  { id: 16, design: "⭐️" },
+  { id: 1, design: "♣️", isFlipped: false, isMatched: false },
+  { id: 2, design: "❤️", isFlipped: false, isMatched: false },
+  { id: 3, design: "♦️", isFlipped: false, isMatched: false },
+  { id: 4, design: "♣️", isFlipped: false, isMatched: false },
+  { id: 5, design: "♠️", isFlipped: false, isMatched: false },
+  { id: 6, design: "♦️", isFlipped: false, isMatched: false },
+  { id: 7, design: "♠️", isFlipped: false, isMatched: false },
+  { id: 8, design: "❤️", isFlipped: false, isMatched: false },
+  { id: 9, design: "😂", isFlipped: false, isMatched: false },
+  { id: 10, design: "😂", isFlipped: false, isMatched: false },
+  { id: 11, design: "🦋", isFlipped: false, isMatched: false },
+  { id: 12, design: "🦋", isFlipped: false, isMatched: false },
+  { id: 13, design: "🐶", isFlipped: false, isMatched: false },
+  { id: 14, design: "🐶", isFlipped: false, isMatched: false },
+  { id: 15, design: "⭐️", isFlipped: false, isMatched: false },
+  { id: 16, design: "⭐️", isFlipped: false, isMatched: false },
 ];
 
 export type CardType = {
   id: number;
   design: string;
+  isFlipped: boolean;
+  isMatched: boolean;
 };
 
 function App(): JSX.Element {
   const [cards, setCards] = useState<Array<CardType>>([]);
-  const [flippedCards, setFlippedCards] = useState<Array<CardType>>([]);
-  const [matchedCards, setMatchedCards] = useState<Array<CardType>>([]);
   const [moves, setMoves] = useState<number>(0);
-  const [start, setStart] = useState(true);
-  const [level, setLevel] = useState("easy");
+
+  const matchedCards = cards.filter((card) => card.isMatched);
 
   const shuffleArray = (array: CardType[]) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -45,47 +46,46 @@ function App(): JSX.Element {
     return array;
   };
 
-  const handleCardClick = (card: CardType) => {
-    if (
-      matchedCards.includes(card) ||
-      flippedCards.includes(card) ||
-      flippedCards.length === 2
-    )
-      return;
+  const handleCardClick = (clickedCard: CardType) => {
+    const updatedCards = [...cards];
+    const cardIndex = cards.findIndex((card) => card.id === clickedCard.id);
+    updatedCards[cardIndex] = { ...updatedCards[cardIndex], isFlipped: true };
+    setCards(updatedCards);
 
-    const newFlippedCards = [...flippedCards, card];
-    setFlippedCards(newFlippedCards);
+    let flippedCards = updatedCards.filter(
+      (card) => card.isFlipped && !card.isMatched
+    );
 
-    if (newFlippedCards.length === 2) {
+    if (flippedCards.length === 2) {
       setMoves(moves + 1);
+      const [card1, card2] = flippedCards;
 
-      if (newFlippedCards[0].design === newFlippedCards[1].design) {
-        setMatchedCards([...matchedCards, ...newFlippedCards]);
-        setFlippedCards([]);
-        return;
+      if (card1.design === card2.design) {
+        const matchedCards = updatedCards.map((card) => {
+          if (card.design === card1.design) {
+            return { ...card, isMatched: true };
+          }
+          return card;
+        });
+        setCards(matchedCards);
+      } else {
+        const unMatchedCards = updatedCards.map((card) => {
+          if (card.id === card1.id || card.id === card2.id) {
+            return { ...card, isFlipped: false };
+          }
+          return card;
+        });
+        setTimeout(() => {
+          setCards(unMatchedCards);
+        }, 1000);
       }
-      setTimeout(() => {
-        setFlippedCards([]);
-      }, 1000);
+    } else {
+      setCards(updatedCards);
     }
   };
 
-  const playAgain = () => {
-    setStart(true);
-    setFlippedCards([]);
-    setMatchedCards([]);
-    setMoves(0);
-    setCards(shuffleArray(CARD_DATA));
-  };
-
   const handleDifficultyLevel = (level: string) => {
-    setLevel(level);
-    setStart(false);
-  };
-
-  useEffect(() => {
     let numOfCards;
-
     switch (level) {
       case "easy":
         numOfCards = 8;
@@ -100,11 +100,16 @@ function App(): JSX.Element {
         numOfCards = 8;
     }
     setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
-  }, [level]);
+  };
 
+  const playAgain = () => {
+    setCards([]);
+    setMoves(0);
+  };
+  // const classes = useAppStyles();
   return (
     <>
-      <AppBar position="static" sx={{ bgcolor: "#E8826F" }}>
+      <AppBar position="static">
         <Typography
           textAlign="center"
           variant="h4"
@@ -115,53 +120,95 @@ function App(): JSX.Element {
         </Typography>
       </AppBar>
 
-      {!start && matchedCards.length !== cards.length ? (
-        <Typography textAlign="center" variant="h5" m={2}>
-          Moves: {moves}
-        </Typography>
+      {matchedCards.length !== cards.length ? (
+        <>
+          <Typography textAlign="center" variant="h5" m={2}>
+            Moves: {moves}
+          </Typography>
+          <Grid display="flex" justifyContent="center">
+            <Button
+              variant="contained"
+              onClick={playAgain}
+              data-testid="btn-playAgain"
+              style={{
+                backgroundColor: "#E4A384",
+                color: "white",
+                margin: "1rem",
+                padding: "0.5rem 1rem",
+              }}
+            >
+              Restart
+            </Button>
+          </Grid>
+        </>
       ) : null}
-      {matchedCards.length === cards.length ? (
+      {matchedCards.length > 0 && cards.length === matchedCards.length ? (
         <>
           <Typography textAlign="center" variant="h4" m={2}>
             Yay! You won. You took {moves} moves
           </Typography>
-          <Button variant="contained" onClick={playAgain}>
-            Play Again
-          </Button>
+          <Grid display="flex" justifyContent="center" alignItems="center">
+            <Button
+              variant="contained"
+              onClick={playAgain}
+              data-testid="btn-playAgain"
+              style={{
+                backgroundColor: "#C34D69",
+                color: "white",
+                margin: "1rem",
+                padding: "0.5rem 1rem",
+              }}
+            >
+              Play Again
+            </Button>
+          </Grid>
         </>
       ) : null}
 
-      {start ? (
+      {cards.length === 0 ? (
         <Grid
           container
           alignItems="center"
+          direction="column"
           display="flex"
           justifyContent="space-around"
-          direction="column"
         >
           <Typography
+            data-testid="sub-title"
+            m={2}
             textAlign="center"
             variant="h5"
-            m={2}
-            data-testid="sub-title"
           >
             Flip and Match to Win! Find all the pairs in the least moves
             possible!
           </Typography>
           <Button
-            variant="contained"
+            data-testid="btn-easy"
             onClick={() => handleDifficultyLevel("easy")}
+            style={{
+              backgroundColor: "#E4A384",
+              color: "white",
+              margin: "1rem",
+              padding: "0.5rem 1.5rem",
+            }}
           >
             Easy
           </Button>
           <Button
-            variant="contained"
+            data-testid="btn-medium"
             onClick={() => handleDifficultyLevel("medium")}
+            style={{
+              backgroundColor: "#DA715B",
+              color: "white",
+              margin: "1rem",
+              padding: "0.5rem 1rem",
+            }}
           >
             Medium
           </Button>
           <Button
-            variant="contained"
+            data-testid="btn-hard"
+            // className={classes.btnHard}
             onClick={() => handleDifficultyLevel("hard")}
           >
             Hard
@@ -177,11 +224,10 @@ function App(): JSX.Element {
         >
           {cards.map((card) => (
             <Card
+              data-testid="cards"
               key={card.id}
               card={card}
               handleCardClick={handleCardClick}
-              flippedCards={flippedCards}
-              matchedCards={matchedCards}
             />
           ))}
         </Grid>

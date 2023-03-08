@@ -10,12 +10,12 @@ export const useCardStyles = makeStyles((theme) => ({
     display: "flex",
     fontSize: "5rem",
     height: "9rem",
-    width: "14rem",
     justifyContent: "center",
     margin: "1rem 2.1rem",
+    width: "14rem",
   },
 
-  flippedDesign: {
+  frontDesign: {
     backgroundColor: "#E8E5D9",
   },
 

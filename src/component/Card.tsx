@@ -4,17 +4,10 @@ import { CardType } from "../App";
 
 type CardProps = {
   card: CardType;
-  flippedCards: Array<CardType>;
   handleCardClick: (card: CardType) => void;
-  matchedCards: Array<CardType>;
 };
 
-export const Card = ({
-  card,
-  flippedCards,
-  handleCardClick,
-  matchedCards,
-}: CardProps) => {
+export const Card = ({ card, handleCardClick }: CardProps) => {
   const classes = useCardStyles();
 
   return (
@@ -22,19 +15,18 @@ export const Card = ({
       container
       item
       alignItems="center"
+      data-testid="my-card"
       direction="row"
       justifyContent="center"
       key={card.id}
       onClick={() => handleCardClick(card)}
       className={`${classes.card} ${
-        flippedCards.includes(card) || matchedCards.includes(card)
-          ? classes.flippedDesign
+        card.isFlipped || card.isMatched
+          ? classes.frontDesign
           : classes.backDesign
       }`}
     >
-      {flippedCards.includes(card) || matchedCards.includes(card)
-        ? card.design
-        : null}
+      {card.isFlipped || card.isMatched ? card.design : null}
     </Grid>
   );
 };
