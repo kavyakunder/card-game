@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import { Card } from "./component/Card";
-import AppBar from "@mui/material/AppBar";
 import { useAppStyles } from "./App.style";
 
 const CARD_DATA: CardType[] = [
@@ -49,7 +49,11 @@ function App(): JSX.Element {
   const handleCardClick = (clickedCard: CardType) => {
     const updatedCards = [...cards];
     const cardIndex = cards.findIndex((card) => card.id === clickedCard.id);
-    updatedCards[cardIndex] = { ...updatedCards[cardIndex], isFlipped: true };
+
+    updatedCards[cardIndex] = {
+      ...updatedCards[cardIndex],
+      isFlipped: true,
+    };
     setCards(updatedCards);
 
     let flippedCards = updatedCards.filter(
@@ -60,25 +64,22 @@ function App(): JSX.Element {
       setMoves(moves + 1);
       const [card1, card2] = flippedCards;
 
-      if (card1.design === card2.design) {
-        const matchedCards = updatedCards.map((card) => {
-          if (card.design === card1.design) {
-            return { ...card, isMatched: true };
-          }
-          return card;
-        });
+      const matchedCards = updatedCards.map((card) => {
+        return {
+          ...card,
+          isMatched:
+            (card1.design === card2.design && card.design === card1.design) ||
+            card.isMatched,
+          isFlipped:
+            card1.design !== card2.design &&
+            ![card1.id, card2.id].includes(card.id) &&
+            card.isMatched,
+        };
+      });
+
+      setTimeout(() => {
         setCards(matchedCards);
-      } else {
-        const unMatchedCards = updatedCards.map((card) => {
-          if (card.id === card1.id || card.id === card2.id) {
-            return { ...card, isFlipped: false };
-          }
-          return card;
-        });
-        setTimeout(() => {
-          setCards(unMatchedCards);
-        }, 1000);
-      }
+      }, 400);
     } else {
       setCards(updatedCards);
     }
@@ -106,21 +107,49 @@ function App(): JSX.Element {
     setCards([]);
     setMoves(0);
   };
-  // const classes = useAppStyles();
+
+  const classes = useAppStyles();
   return (
     <>
-      <AppBar position="static">
-        <Typography
-          textAlign="center"
-          variant="h4"
-          margin={2}
-          data-testid="title"
-        >
-          Match the Cards🃏
-        </Typography>
-      </AppBar>
+      <div className={classes.appHeader}>
+        <AppBar position="static">
+          <Typography
+            textAlign="center"
+            variant="h4"
+            margin={2}
+            data-testid="title"
+          >
+            Match the Cards🃏
+          </Typography>
+        </AppBar>
+      </div>
 
-      {matchedCards.length !== cards.length ? (
+      {cards.length === matchedCards.length ? (
+        <>
+          {matchedCards.length > 0 ? (
+            <>
+              <Typography textAlign="center" variant="h4" m={2}>
+                Yay! You won. You took {moves} moves
+              </Typography>
+              <Grid display="flex" justifyContent="center" alignItems="center">
+                <Button
+                  variant="contained"
+                  onClick={playAgain}
+                  data-testid="btn-playAgain"
+                  style={{
+                    backgroundColor: "#C34D69",
+                    color: "white",
+                    margin: "1rem",
+                    padding: "0.5rem 1rem",
+                  }}
+                >
+                  Play Again
+                </Button>
+              </Grid>
+            </>
+          ) : null}
+        </>
+      ) : (
         <>
           <Typography textAlign="center" variant="h5" m={2}>
             Moves: {moves}
@@ -141,29 +170,7 @@ function App(): JSX.Element {
             </Button>
           </Grid>
         </>
-      ) : null}
-      {matchedCards.length > 0 && cards.length === matchedCards.length ? (
-        <>
-          <Typography textAlign="center" variant="h4" m={2}>
-            Yay! You won. You took {moves} moves
-          </Typography>
-          <Grid display="flex" justifyContent="center" alignItems="center">
-            <Button
-              variant="contained"
-              onClick={playAgain}
-              data-testid="btn-playAgain"
-              style={{
-                backgroundColor: "#C34D69",
-                color: "white",
-                margin: "1rem",
-                padding: "0.5rem 1rem",
-              }}
-            >
-              Play Again
-            </Button>
-          </Grid>
-        </>
-      ) : null}
+      )}
 
       {cards.length === 0 ? (
         <Grid
@@ -181,6 +188,14 @@ function App(): JSX.Element {
           >
             Flip and Match to Win! Find all the pairs in the least moves
             possible!
+          </Typography>
+          <Typography
+            data-testid="sub-title"
+            m={2}
+            textAlign="center"
+            variant="h5"
+          >
+            Choose a level:
           </Typography>
           <Button
             data-testid="btn-easy"
@@ -208,8 +223,13 @@ function App(): JSX.Element {
           </Button>
           <Button
             data-testid="btn-hard"
-            // className={classes.btnHard}
             onClick={() => handleDifficultyLevel("hard")}
+            style={{
+              backgroundColor: "#D35D7B",
+              color: "white",
+              margin: "1rem",
+              padding: "0.5rem 1.5rem",
+            }}
           >
             Hard
           </Button>
