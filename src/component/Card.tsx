@@ -10,6 +10,7 @@ type CardProps = {
 export const Card = ({ card, handleCardClick }: CardProps) => {
   const classes = useCardStyles();
 
+  const flippedOrMatched = card.isFlipped || card.isMatched;
   return (
     <div className={classes.card}>
       <Grid
@@ -21,13 +22,9 @@ export const Card = ({ card, handleCardClick }: CardProps) => {
         justifyContent="center"
         key={card.id}
         onClick={() => handleCardClick(card)}
-        className={
-          card.isFlipped || card.isMatched
-            ? classes.frontDesign
-            : classes.backDesign
-        }
+        className={flippedOrMatched ? classes.frontDesign : classes.backDesign}
       >
-        {card.isFlipped || card.isMatched ? card.design : null}
+        {flippedOrMatched ? card.design : null}
       </Grid>
     </div>
   );

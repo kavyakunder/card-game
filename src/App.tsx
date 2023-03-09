@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
 import Grid from "@mui/material/Grid";
 import { Card } from "./component/Card";
+import { useMemo } from "react";
 import { useAppStyles } from "./App.style";
 
 const CARD_DATA: CardType[] = [
@@ -36,11 +37,14 @@ function App(): JSX.Element {
   const [cards, setCards] = useState<Array<CardType>>([]);
   const [moves, setMoves] = useState<number>(0);
 
-  const matchedCards = cards.filter((card) => card.isMatched);
+  const matchedCards = useMemo(
+    () => cards.filter((card) => card.isMatched),
+    [cards]
+  );
 
   const shuffleArray = (array: CardType[]) => {
     for (let i = array.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
@@ -48,22 +52,23 @@ function App(): JSX.Element {
 
   const handleCardClick = (clickedCard: CardType) => {
     const updatedCards = [...cards];
+
     const cardIndex = cards.findIndex((card) => card.id === clickedCard.id);
 
     updatedCards[cardIndex] = {
       ...updatedCards[cardIndex],
       isFlipped: true,
     };
+
     setCards(updatedCards);
 
-    let flippedCards = updatedCards.filter(
+    const flippedCards = updatedCards.filter(
       (card) => card.isFlipped && !card.isMatched
     );
 
     if (flippedCards.length === 2) {
       setMoves(moves + 1);
       const [card1, card2] = flippedCards;
-
       const matchedCards = updatedCards.map((card) => {
         return {
           ...card,
@@ -76,15 +81,13 @@ function App(): JSX.Element {
             card.isMatched,
         };
       });
-
       setTimeout(() => {
         setCards(matchedCards);
-      }, 400);
+      }, 1000);
     } else {
       setCards(updatedCards);
     }
   };
-
   const handleDifficultyLevel = (level: string) => {
     let numOfCards;
     switch (level) {
@@ -103,7 +106,7 @@ function App(): JSX.Element {
     setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
   };
 
-  const playAgain = () => {
+  const handleRestart = () => {
     setCards([]);
     setMoves(0);
   };
@@ -134,7 +137,7 @@ function App(): JSX.Element {
               <Grid display="flex" justifyContent="center" alignItems="center">
                 <Button
                   variant="contained"
-                  onClick={playAgain}
+                  onClick={handleRestart}
                   data-testid="btn-playAgain"
                   style={{
                     backgroundColor: "#C34D69",
@@ -157,7 +160,7 @@ function App(): JSX.Element {
           <Grid display="flex" justifyContent="center">
             <Button
               variant="contained"
-              onClick={playAgain}
+              onClick={handleRestart}
               data-testid="btn-playAgain"
               style={{
                 backgroundColor: "#E4A384",
@@ -172,13 +175,14 @@ function App(): JSX.Element {
         </>
       )}
 
-      {cards.length === 0 ? (
+      {!cards.length ? (
         <Grid
           container
           alignItems="center"
           direction="column"
           display="flex"
           justifyContent="space-around"
+          className={classes.btnLevels}
         >
           <Typography
             data-testid="sub-title"
@@ -200,36 +204,18 @@ function App(): JSX.Element {
           <Button
             data-testid="btn-easy"
             onClick={() => handleDifficultyLevel("easy")}
-            style={{
-              backgroundColor: "#E4A384",
-              color: "#ffff",
-              margin: "1rem",
-              padding: "0.5rem 1.5rem",
-            }}
           >
             Easy
           </Button>
           <Button
             data-testid="btn-medium"
             onClick={() => handleDifficultyLevel("medium")}
-            style={{
-              backgroundColor: "#DA715B",
-              color: "#fff",
-              margin: "1rem",
-              padding: "0.5rem 1rem",
-            }}
           >
             Medium
           </Button>
           <Button
             data-testid="btn-hard"
             onClick={() => handleDifficultyLevel("hard")}
-            style={{
-              backgroundColor: "#D35D7B",
-              color: "#ffff",
-              margin: "1rem",
-              padding: "0.5rem 1.5rem",
-            }}
           >
             Hard
           </Button>
