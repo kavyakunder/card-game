@@ -202,7 +202,7 @@ function App(): JSX.Element {
             onClick={() => handleDifficultyLevel("easy")}
             style={{
               backgroundColor: "#E4A384",
-              color: "white",
+              color: "#ffff",
               margin: "1rem",
               padding: "0.5rem 1.5rem",
             }}
@@ -214,7 +214,7 @@ function App(): JSX.Element {
             onClick={() => handleDifficultyLevel("medium")}
             style={{
               backgroundColor: "#DA715B",
-              color: "white",
+              color: "#fff",
               margin: "1rem",
               padding: "0.5rem 1rem",
             }}
@@ -226,7 +226,7 @@ function App(): JSX.Element {
             onClick={() => handleDifficultyLevel("hard")}
             style={{
               backgroundColor: "#D35D7B",
-              color: "white",
+              color: "#ffff",
               margin: "1rem",
               padding: "0.5rem 1.5rem",
             }}
