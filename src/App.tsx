@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AppBar from "@mui/material/AppBar";
@@ -43,74 +43,81 @@ function App(): JSX.Element {
     [cards]
   );
 
-  const shuffleArray = (array: CardType[]) => {
+  const shuffleArray = useCallback((array: CardType[]) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  };
+  }, []);
 
-  const handleCardClick = (clickedCard: CardType) => {
-    const updatedCards = [...cards];
+  const handleCardClick = useCallback(
+    (clickedCard: CardType) => {
+      const updatedCards = [...cards];
 
-    const cardIndex = cards.findIndex((card) => card.id === clickedCard.id);
+      const cardIndex = cards.findIndex((card) => card.id === clickedCard.id);
 
-    updatedCards[cardIndex] = {
-      ...updatedCards[cardIndex],
-      isFlipped: true,
-    };
+      updatedCards[cardIndex] = {
+        ...updatedCards[cardIndex],
+        isFlipped: true,
+      };
 
-    setCards(updatedCards);
-
-    const flippedCards = updatedCards.filter(
-      (card) => card.isFlipped && !card.isMatched
-    );
-
-    if (flippedCards.length === 2) {
-      setMoves(moves + 1);
-      const [card1, card2] = flippedCards;
-      const matchedCards = updatedCards.map((card) => {
-        return {
-          ...card,
-          isMatched:
-            (card1.design === card2.design && card.design === card1.design) ||
-            card.isMatched,
-          isFlipped:
-            card1.design !== card2.design &&
-            ![card1.id, card2.id].includes(card.id) &&
-            card.isFlipped,
-        };
-      });
-      setTimeout(() => {
-        setCards(matchedCards);
-      }, 1000);
-    } else {
       setCards(updatedCards);
-    }
-  };
-  const handleDifficultyLevel = (level: string) => {
-    let numOfCards;
-    switch (level) {
-      case "easy":
-        numOfCards = 8;
-        break;
-      case "medium":
-        numOfCards = 12;
-        break;
-      case "hard":
-        numOfCards = 16;
-        break;
-      default:
-        numOfCards = 8;
-    }
-    setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
-  };
 
-  const handleRestart = () => {
+      const flippedCards = updatedCards.filter(
+        (card) => card.isFlipped && !card.isMatched
+      );
+
+      if (flippedCards.length === 2) {
+        setMoves(moves + 1);
+        const [card1, card2] = flippedCards;
+        const checkFlippedCardsEquality = card1.design === card2.design;
+        const matchedCards = updatedCards.map((card) => {
+          return {
+            ...card,
+            isMatched:
+              (checkFlippedCardsEquality && card.design === card1.design) ||
+              card.isMatched,
+            isFlipped:
+              !checkFlippedCardsEquality &&
+              ![card1.id, card2.id].includes(card.id) &&
+              card.isFlipped,
+          };
+        });
+        setTimeout(() => {
+          setCards(matchedCards);
+        }, 1000);
+      } else {
+        setCards(updatedCards);
+      }
+    },
+    [cards, moves]
+  );
+  const handleDifficultyLevel = useCallback(
+    (level: string) => {
+      let numOfCards;
+      switch (level) {
+        case "easy":
+          numOfCards = 8;
+          break;
+        case "medium":
+          numOfCards = 12;
+          break;
+        case "hard":
+          numOfCards = 16;
+          break;
+        default:
+          numOfCards = 8;
+      }
+      setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
+    },
+    [shuffleArray]
+  );
+
+  const handleRestart = useCallback(() => {
     setCards([]);
     setMoves(0);
-  };
+  }, []);
 
   return (
     <>
@@ -182,7 +189,7 @@ function App(): JSX.Element {
             possible!
           </Typography>
           <Typography
-            data-testid="sub-title"
+            data-testid="all-levels"
             m={2}
             textAlign="center"
             variant="h5"
