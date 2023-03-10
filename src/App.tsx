@@ -6,6 +6,8 @@ import Grid from "@mui/material/Grid";
 import { Card } from "./component/Card";
 import { useMemo } from "react";
 import { useAppStyles } from "./App.style";
+// import { useTheme } from "@emotion/react";
+import { useTheme } from "@mui/material/styles";
 
 const CARD_DATA: CardType[] = [
   { id: 1, design: "♣️", isFlipped: false, isMatched: false },
@@ -36,6 +38,7 @@ export type CardType = {
 function App(): JSX.Element {
   const [cards, setCards] = useState<Array<CardType>>([]);
   const [moves, setMoves] = useState<number>(0);
+  const classes = useAppStyles();
 
   const matchedCards = useMemo(
     () => cards.filter((card) => card.isMatched),
@@ -78,7 +81,7 @@ function App(): JSX.Element {
           isFlipped:
             card1.design !== card2.design &&
             ![card1.id, card2.id].includes(card.id) &&
-            card.isMatched,
+            card.isFlipped,
         };
       });
       setTimeout(() => {
@@ -111,7 +114,6 @@ function App(): JSX.Element {
     setMoves(0);
   };
 
-  const classes = useAppStyles();
   return (
     <>
       <div className={classes.appHeader}>
@@ -129,23 +131,18 @@ function App(): JSX.Element {
 
       {cards.length === matchedCards.length ? (
         <>
-          {matchedCards.length > 0 ? (
+          {matchedCards.length ? (
             <>
               <Typography textAlign="center" variant="h4" m={2}>
                 Yay! You won. You took {moves} moves
               </Typography>
-              <Grid display="flex" justifyContent="center" alignItems="center">
-                <Button
-                  variant="contained"
-                  onClick={handleRestart}
-                  data-testid="btn-playAgain"
-                  style={{
-                    backgroundColor: "#C34D69",
-                    color: "white",
-                    margin: "1rem",
-                    padding: "0.5rem 1rem",
-                  }}
-                >
+              <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                className={classes.btnAll}
+              >
+                <Button onClick={handleRestart} data-testid="btn-playAgain">
                   Play Again
                 </Button>
               </Grid>
@@ -157,18 +154,13 @@ function App(): JSX.Element {
           <Typography textAlign="center" variant="h5" m={2}>
             Moves: {moves}
           </Typography>
-          <Grid display="flex" justifyContent="center">
-            <Button
-              variant="contained"
-              onClick={handleRestart}
-              data-testid="btn-playAgain"
-              style={{
-                backgroundColor: "#E4A384",
-                color: "white",
-                margin: "1rem",
-                padding: "0.5rem 1rem",
-              }}
-            >
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            className={classes.btnAll}
+          >
+            <Button onClick={handleRestart} data-testid="btn-playAgain">
               Restart
             </Button>
           </Grid>
@@ -180,9 +172,7 @@ function App(): JSX.Element {
           container
           alignItems="center"
           direction="column"
-          display="flex"
-          justifyContent="space-around"
-          className={classes.btnLevels}
+          className={classes.btnAll}
         >
           <Typography
             data-testid="sub-title"
@@ -224,7 +214,6 @@ function App(): JSX.Element {
         <Grid
           container
           alignItems="center"
-          display="flex"
           direction="row"
           justifyContent="center"
         >

@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import { useCardStyles } from "./Card.style";
 import { CardType } from "../App";
+import { useMemo } from "react";
 
 type CardProps = {
   card: CardType;
@@ -10,7 +11,11 @@ type CardProps = {
 export const Card = ({ card, handleCardClick }: CardProps) => {
   const classes = useCardStyles();
 
-  const flippedOrMatched = card.isFlipped || card.isMatched;
+  const isFlippedOrMatched = useMemo(
+    () => card.isFlipped || card.isMatched,
+    [card.isFlipped]
+  );
+
   return (
     <div className={classes.card}>
       <Grid
@@ -22,9 +27,11 @@ export const Card = ({ card, handleCardClick }: CardProps) => {
         justifyContent="center"
         key={card.id}
         onClick={() => handleCardClick(card)}
-        className={flippedOrMatched ? classes.frontDesign : classes.backDesign}
+        className={
+          isFlippedOrMatched ? classes.frontDesign : classes.backDesign
+        }
       >
-        {flippedOrMatched ? card.design : null}
+        {isFlippedOrMatched ? card.design : null}
       </Grid>
     </div>
   );
