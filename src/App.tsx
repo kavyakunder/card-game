@@ -33,6 +33,14 @@ export type CardType = {
   isMatched: boolean;
 };
 
+const shuffleArray = (array: CardType[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
 function App(): JSX.Element {
   const [cards, setCards] = useState<Array<CardType>>([]);
   const [moves, setMoves] = useState<number>(0);
@@ -42,14 +50,6 @@ function App(): JSX.Element {
     () => cards.filter((card) => card.isMatched),
     [cards]
   );
-
-  const shuffleArray = useCallback((array: CardType[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }, []);
 
   const handleCardClick = useCallback(
     (clickedCard: CardType) => {
@@ -71,17 +71,17 @@ function App(): JSX.Element {
       if (flippedCards.length === 2) {
         setMoves(moves + 1);
         const [card1, card2] = flippedCards;
-        const checkFlippedCardsEquality = card1.design === card2.design;
+        const areFlippedCardsEqual = card1.design === card2.design;
         const matchedCards = updatedCards.map((card) => {
           return {
             ...card,
             isMatched:
-              (checkFlippedCardsEquality && card.design === card1.design) ||
-              card.isMatched,
+              card.isMatched ||
+              (areFlippedCardsEqual && card.design === card1.design),
             isFlipped:
-              !checkFlippedCardsEquality &&
-              ![card1.id, card2.id].includes(card.id) &&
-              card.isFlipped,
+              card.isFlipped &&
+              !areFlippedCardsEqual &&
+              ![card1.id, card2.id].includes(card.id),
           };
         });
         setTimeout(() => {
@@ -93,26 +93,23 @@ function App(): JSX.Element {
     },
     [cards, moves]
   );
-  const handleDifficultyLevel = useCallback(
-    (level: string) => {
-      let numOfCards;
-      switch (level) {
-        case "easy":
-          numOfCards = 8;
-          break;
-        case "medium":
-          numOfCards = 12;
-          break;
-        case "hard":
-          numOfCards = 16;
-          break;
-        default:
-          numOfCards = 8;
-      }
-      setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
-    },
-    [shuffleArray]
-  );
+  const handleDifficultyLevel = useCallback((level: string) => {
+    let numOfCards;
+    switch (level) {
+      case "easy":
+        numOfCards = 8;
+        break;
+      case "medium":
+        numOfCards = 12;
+        break;
+      case "hard":
+        numOfCards = 16;
+        break;
+      default:
+        numOfCards = 8;
+    }
+    setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
+  }, []);
 
   const handleRestart = useCallback(() => {
     setCards([]);
@@ -145,7 +142,7 @@ function App(): JSX.Element {
                 container
                 justifyContent="center"
                 alignItems="center"
-                className={classes.btnAll}
+                className={classes.btnContainer}
               >
                 <Button onClick={handleRestart} data-testid="btn-playAgain">
                   Play Again
@@ -163,7 +160,7 @@ function App(): JSX.Element {
             container
             justifyContent="center"
             alignItems="center"
-            className={classes.btnAll}
+            className={classes.btnContainer}
           >
             <Button onClick={handleRestart} data-testid="btn-playAgain">
               Restart
@@ -177,7 +174,7 @@ function App(): JSX.Element {
           container
           alignItems="center"
           direction="column"
-          className={classes.btnAll}
+          className={classes.btnContainer}
         >
           <Typography
             data-testid="sub-title"
@@ -223,12 +220,7 @@ function App(): JSX.Element {
           justifyContent="center"
         >
           {cards.map((card) => (
-            <Card
-              data-testid="cards"
-              key={card.id}
-              card={card}
-              handleCardClick={handleCardClick}
-            />
+            <Card key={card.id} card={card} handleCardClick={handleCardClick} />
           ))}
         </Grid>
       )}

@@ -3,7 +3,7 @@ import { useCardStyles } from "./Card.style";
 import { CardType } from "../App";
 import { useMemo } from "react";
 
-type CardProps = {
+export type CardProps = {
   card: CardType;
   handleCardClick: (card: CardType) => void;
 };

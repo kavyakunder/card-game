@@ -1,7 +1,7 @@
 import { makeStyles } from "@mui/styles";
 
 export const useAppStyles = makeStyles({
-  btnAll: {
+  btnContainer: {
     "& .MuiButtonBase-root": {
       backgroundColor: "#DA715B",
       color: "#ffffff",
