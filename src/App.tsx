@@ -6,8 +6,6 @@ import Grid from "@mui/material/Grid";
 import { Card } from "./component/Card";
 import { useMemo } from "react";
 import { useAppStyles } from "./App.style";
-// import { useTheme } from "@emotion/react";
-import { useTheme } from "@mui/material/styles";
 
 const CARD_DATA: CardType[] = [
   { id: 1, design: "♣️", isFlipped: false, isMatched: false },
