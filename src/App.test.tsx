@@ -67,12 +67,12 @@ describe("App.tsx", () => {
     fireEvent.click(allCards[0]);
     fireEvent.click(allCards[1]);
 
-    const moves = screen.getByTestId("moves");
-    expect(moves).toHaveTextContent("Moves: 1");
-
     act(() => {
       jest.runAllTimers();
     });
+
+    const moves = screen.getByTestId("moves");
+    expect(moves).toHaveTextContent("Moves: 1");
   });
 
   it("Should restart the game", () => {
