@@ -105,6 +105,8 @@ function App(): JSX.Element {
       case "hard":
         numOfCards = 16;
         break;
+      default:
+        numOfCards = 8;
     }
     setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
   }, []);

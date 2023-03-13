@@ -3,7 +3,7 @@ describe("Card game", () => {
     cy.visit("http://localhost:3000/");
   });
 
-  it("displays title, sub-title and button", () => {
+  it("Should display title, sub-title and button", () => {
     cy.get('[data-testid="title"]').should("contain", "Match the Cards🃏");
     cy.get('[data-testid="sub-title"]').should(
       "contain",
@@ -15,7 +15,7 @@ describe("Card game", () => {
     cy.get('[data-testid="btn-hard"]').contains("Hard");
   });
 
-  it("displays card flip and moves increment", () => {
+  it("Increment moves when cards are flipped", () => {
     cy.get('[data-testid="btn-easy"]').click();
     cy.get('[data-testid="moves"]').contains("Moves");
     cy.get('[data-testid="btn-restart"]').contains("Restart");
@@ -28,7 +28,7 @@ describe("Card game", () => {
     cy.get('[data-testid="moves"]').contains(1);
   });
 
-  it("restart when click on restart", () => {
+  it("Should restart the game", () => {
     cy.get('[data-testid="btn-easy"]').click();
     cy.get('[data-testid="btn-restart"]').click();
     cy.get('[data-testid="all-levels"]').should("contain", "Choose a level:");
