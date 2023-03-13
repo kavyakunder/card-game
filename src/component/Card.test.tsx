@@ -3,7 +3,7 @@ import { Card } from "./Card";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { CardProps } from "./Card";
 
-describe("Card", () => {
+describe("Card.tsx", () => {
   it("Should render card on screen", () => {
     const flippedCard = { ...mockCard, isFlipped: true };
     render(<Card {...mockProps} card={flippedCard} />);

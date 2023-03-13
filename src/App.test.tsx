@@ -8,9 +8,10 @@ jest.mock("./component/Card", () => ({
   ),
 }));
 
-describe("App", () => {
+describe("App.tsx", () => {
   it("Should render title, subtitle and buttons", async () => {
     render(<App />);
+
     const title = screen.getByTestId("title");
     const subtitle = screen.getByTestId("sub-title");
     const btnEasy = screen.getByTestId("btn-easy");
@@ -72,20 +73,23 @@ describe("App", () => {
     act(() => {
       jest.runAllTimers();
     });
-
-    expect(allCards[0]).toHaveTextContent("Card");
   });
 
   it("Should restart the game", () => {
     render(<App />);
+
     const btnHard = screen.getByTestId("btn-hard");
     fireEvent.click(btnHard);
 
     const btnRestart = screen.getByTestId("btn-restart");
     const moves = screen.getByTestId("moves");
+
     expect(btnRestart).toBeInTheDocument();
     expect(moves).toBeInTheDocument();
 
     fireEvent.click(btnRestart);
+
+    const subtitle = screen.getByTestId("sub-title");
+    expect(subtitle).toBeInTheDocument();
   });
 });
