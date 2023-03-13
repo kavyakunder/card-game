@@ -3,7 +3,7 @@ describe("Card game", () => {
     cy.visit("http://localhost:3000/");
   });
 
-  it("displays title,sub-title and button", () => {
+  it("displays title, sub-title and button", () => {
     cy.get('[data-testid="title"]').should("contain", "Match the Cards🃏");
     cy.get('[data-testid="sub-title"]').should(
       "contain",
