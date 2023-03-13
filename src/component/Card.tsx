@@ -13,7 +13,7 @@ export const Card = ({ card, handleCardClick }: CardProps) => {
 
   const isFlippedOrMatched = useMemo(
     () => card.isFlipped || card.isMatched,
-    [card.isFlipped]
+    [card.isFlipped, card.isMatched]
   );
 
   return (
@@ -22,7 +22,7 @@ export const Card = ({ card, handleCardClick }: CardProps) => {
         container
         item
         alignItems="center"
-        data-testid="my-card"
+        data-testid="card"
         direction="row"
         justifyContent="center"
         key={card.id}
