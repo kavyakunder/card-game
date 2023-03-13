@@ -105,8 +105,6 @@ function App(): JSX.Element {
       case "hard":
         numOfCards = 16;
         break;
-      default:
-        numOfCards = 8;
     }
     setCards(shuffleArray(CARD_DATA.slice(0, numOfCards)));
   }, []);
@@ -153,7 +151,7 @@ function App(): JSX.Element {
         </>
       ) : (
         <>
-          <Typography textAlign="center" variant="h5" m={2}>
+          <Typography textAlign="center" variant="h5" m={2} data-testid="moves">
             Moves: {moves}
           </Typography>
           <Grid
@@ -162,7 +160,7 @@ function App(): JSX.Element {
             alignItems="center"
             className={classes.btnContainer}
           >
-            <Button onClick={handleRestart} data-testid="btn-playAgain">
+            <Button onClick={handleRestart} data-testid="btn-restart">
               Restart
             </Button>
           </Grid>
@@ -218,6 +216,7 @@ function App(): JSX.Element {
           alignItems="center"
           direction="row"
           justifyContent="center"
+          data-testid="all-cards"
         >
           {cards.map((card) => (
             <Card key={card.id} card={card} handleCardClick={handleCardClick} />
@@ -228,4 +227,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+export { App };
