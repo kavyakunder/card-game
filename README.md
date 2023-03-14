@@ -1,46 +1,22 @@
-# Getting Started with Create React App
+<img width="1440" alt="cards 3" src="https://user-images.githubusercontent.com/81958043/224987950-f15e1bff-315c-44d9-adbf-a6b3a92ab8f9.png">
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img width="1440" alt="cards 4" src="https://user-images.githubusercontent.com/81958043/224988191-c3b32e22-5397-4377-9379-0ce5d9441ec9.png">
 
-## Available Scripts
+<img width="1440" alt="CARDS 5" src="https://user-images.githubusercontent.com/81958043/224988498-f761c684-4289-422c-a564-92fab13d36be.png">
 
-In the project directory, you can run:
+# Card Game
 
-### `npm start`
+Card game is an exciting way to sharpen your memory and have fun at the same time.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Techstack Used:
+1. React + Typescript
+2. Material UI for styling
+3. Jest and React-testing library for unit tests
+4. Cypress for E2E Testing
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Features:
+1. Easy displays 8 cards
+2. Medium displays 12 cards
+3. Hard displays 16 cards
+4. Increment moves when cards gets matched
+5. Restart game whenever required
