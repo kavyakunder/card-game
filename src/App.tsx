@@ -6,15 +6,16 @@ import Grid from "@mui/material/Grid";
 import { Card } from "./component/Card";
 import { useMemo } from "react";
 import { useAppStyles } from "./App.style";
+import { shuffleArray } from "./utils";
 
 const CARD_DATA: CardType[] = [
   { id: 1, design: "♣️", isFlipped: false, isMatched: false },
-  { id: 2, design: "❤️", isFlipped: false, isMatched: false },
+  { id: 2, design: "♣️", isFlipped: false, isMatched: false },
   { id: 3, design: "♦️", isFlipped: false, isMatched: false },
-  { id: 4, design: "♣️", isFlipped: false, isMatched: false },
+  { id: 4, design: "♦️", isFlipped: false, isMatched: false },
   { id: 5, design: "♠️", isFlipped: false, isMatched: false },
-  { id: 6, design: "♦️", isFlipped: false, isMatched: false },
-  { id: 7, design: "♠️", isFlipped: false, isMatched: false },
+  { id: 6, design: "♠️", isFlipped: false, isMatched: false },
+  { id: 7, design: "❤️", isFlipped: false, isMatched: false },
   { id: 8, design: "❤️", isFlipped: false, isMatched: false },
   { id: 9, design: "😂", isFlipped: false, isMatched: false },
   { id: 10, design: "😂", isFlipped: false, isMatched: false },
@@ -31,14 +32,6 @@ export type CardType = {
   design: string;
   isFlipped: boolean;
   isMatched: boolean;
-};
-
-const shuffleArray = (array: CardType[]) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
 };
 
 function App(): JSX.Element {
@@ -93,6 +86,7 @@ function App(): JSX.Element {
     },
     [cards, moves]
   );
+
   const handleDifficultyLevel = useCallback((level: string) => {
     let numOfCards;
     switch (level) {
@@ -135,7 +129,12 @@ function App(): JSX.Element {
         <>
           {matchedCards.length ? (
             <>
-              <Typography textAlign="center" variant="h4" m={2}>
+              <Typography
+                textAlign="center"
+                variant="h4"
+                m={2}
+                data-testid="winner"
+              >
                 Yay! You won. You took {moves} moves
               </Typography>
               <Grid
